@@ -47,6 +47,7 @@ public class UsersController : BaseApiController
     public async Task<ActionResult> UpdateUser(MemberUpdateRequest request)
     {
         var user = await _repository.GetByUsernameAsync(User.GetUserName());
+
         if (user == null)
         {
             return BadRequest("Could not find user");
@@ -62,30 +63,43 @@ public class UsersController : BaseApiController
 
         return BadRequest("Update user failed!");
     }
+
     [HttpPost("photo")]
     public async Task<ActionResult<PhotoResponse>> AddPhoto(IFormFile file)
     {
         var user = await _repository.GetByUsernameAsync(User.GetUserName());
+
         if (user == null)
         {
             return BadRequest("Cannot update user");
         }
+
         var result = await _photoService.AddPhotoAsync(file);
+
         if (result.Error != null)
         {
             return BadRequest(result.Error.Message);
         }
+
         var photo = new Photo
         {
             Url = result.SecureUrl.AbsoluteUri,
             PublicId = result.PublicId
         };
+
+        if (user.Photos.Count == 0)
+        {
+            photo.IsMain = true;
+        }
+
         user.Photos.Add(photo);
+
         if (await _repository.SaveAllAsync())
         {
             return CreatedAtAction("GetByUsername",
                 new { username = user.UserName }, _mapper.Map<PhotoResponse>(photo));
         }
+
         return BadRequest("Problem adding the photo");
     }
 
@@ -134,5 +148,4 @@ public class UsersController : BaseApiController
 
         return BadRequest("There was a problem when deleting the photo");
     }
-
 }
