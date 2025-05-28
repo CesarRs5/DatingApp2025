@@ -16,7 +16,7 @@ export class MessagesService {
   private http = inject(HttpClient);
   private hubConnection?: HubConnection;
   paginatedResult = signal<PaginatedResult<Message[]> | null>(null);
-   messageThread = signal<Message[]>([]);
+  messageThread = signal<Message[]>([]);
 
   createHubConnection(user: User, otherUsername: string) {
     this.hubConnection = new HubConnectionBuilder()
@@ -31,6 +31,7 @@ export class MessagesService {
     this.hubConnection.on("ReceiveMessageThread", messages => {
       this.messageThread.set(messages);
     });
+
     this.hubConnection.on("NewMessage", message => {
       this.messageThread.update(messages => [...messages, message]);
     })
@@ -53,11 +54,12 @@ export class MessagesService {
   }
 
   getMessageThread(username: string) {
-    return this.http.get<Message[]>(this.baseUrl + "messages/thread/" + username);  
+    return this.http.get<Message[]>(this.baseUrl + "messages/thread/" + username);
   }
-  
-  async sendMessage(username: string, content: string) {
-    return this.hubConnection?.invoke("SendMessage", { recipientUsername: username, content});
+
+  async sendMessageAsync(username: string, content: string) {
+
+    return this.hubConnection?.invoke("SendMessageAsync", { recipientUsername: username, content});
   }
 
   deleteMessage(id: number) {
