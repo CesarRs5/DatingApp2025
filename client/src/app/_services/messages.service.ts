@@ -6,7 +6,7 @@ import { Message } from '../_models/message';
 import { PaginatedResult } from '../_models/pagination';
 import { HubConnection, HubConnectionBuilder, HubConnectionState } from '@microsoft/signalr';
 import { User } from '../_models/user';
-import { MessageGroup } from '../_models/groups';
+import { MessageGroup } from '../_models/messagegroup';
 
 @Injectable({
   providedIn: 'root'
