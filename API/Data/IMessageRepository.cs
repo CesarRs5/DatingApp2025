@@ -10,6 +10,7 @@ public interface IMessageRepository
     public void Remove(Message message);
     public Task<Message?> GetAsync(int id);
     public Task<PagedList<MessageResponse>> GetForUserAsync(MessageParams messageParams);
+    public Task<MessageGroup?> GetMessageGroupForConnectionAsync(string connectionId);
     public Task<IEnumerable<MessageResponse>> GetThreadAsync(string currentUsername, string recipientUsername);
     public Task<bool> SaveAllAsync();
     public void AddGroup(MessageGroup group);
