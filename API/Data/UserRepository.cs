@@ -1,8 +1,7 @@
-
 namespace API.Data;
 
-using System.Globalization;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading.Tasks;
 using API.DataEntities;
 using API.DTOs;
@@ -10,7 +9,6 @@ using API.Helpers;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
-
 public class UserRepository(DataContext context, IMapper mapper) : IUserRepository
 {
     public async Task<IEnumerable<AppUser>> GetAllAsync()
@@ -59,8 +57,7 @@ public class UserRepository(DataContext context, IMapper mapper) : IUserReposito
             query.ProjectTo<MemberResponse>(mapper.ConfigurationProvider), userParams.PageNumber, userParams.PageSize);
     }
 
-    public async Task<bool> SaveAllAsync()
-        => await context.SaveChangesAsync() > 0;
+
 
     public void Update(AppUser user)
         => context.Entry(user).State = EntityState.Modified;
